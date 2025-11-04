@@ -58,7 +58,7 @@ export async function handleGetPage(client, args) {
               contentType: page.contentType,
               isPublished: page.isPublished,
               locale: page.locale,
-              tags: page.tags?.map(t => t.tag) || [],
+              tags: page.tags || [],
               createdAt: page.createdAt,
               updatedAt: page.updatedAt,
             },
