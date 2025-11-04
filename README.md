@@ -66,15 +66,15 @@ Verify connection: `/mcp` should show "wikijs ✓ connected"
 
 ## Available Tools
 
-| Tool | Description |
-|------|-------------|
-| `create_page` | Create new wiki pages with markdown/HTML content |
-| `update_page` | Modify existing pages (content, title, tags, etc.) |
-| `get_page` | Retrieve page by ID or path |
-| `list_pages` | List all pages with optional filtering |
-| `search_pages` | Full-text search across wiki content |
-| `delete_page` | Remove pages from wiki |
-| `move_page` | Reorganize content by moving pages |
+| Tool           | Description                                        |
+| -------------- | -------------------------------------------------- |
+| `create_page`  | Create new wiki pages with markdown/HTML content   |
+| `update_page`  | Modify existing pages (content, title, tags, etc.) |
+| `get_page`     | Retrieve page by ID or path                        |
+| `list_pages`   | List all pages with optional filtering             |
+| `search_pages` | Full-text search across wiki content               |
+| `delete_page`  | Remove pages from wiki                             |
+| `move_page`    | Reorganize content by moving pages                 |
 
 **See [full documentation](https://faq.markus-michalski.net/en/mcp/wikijs) for detailed examples and troubleshooting.**
 
@@ -107,6 +107,7 @@ MIT License - See [LICENSE](LICENSE) file for details.
 ## Author
 
 **Markus Michalski**
+
 - Website: [markus-michalski.net](https://markus-michalski.net)
 - Wiki: [faq.markus-michalski.net](https://faq.markus-michalski.net)
 - GitHub: [@markus-michalski](https://github.com/markus-michalski)
@@ -114,3 +115,9 @@ MIT License - See [LICENSE](LICENSE) file for details.
 ## Contributing
 
 Contributions welcome! Please open an issue or pull request.
+
+## ☕ Support Development
+
+This MCP server is completely free and open source. If it saves you time or makes your work easier, I'd appreciate a small donation to keep me caffeinated while developing and maintaining this and other projects
+
+[![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://paypal.me/tondiar)Your support helps me continue improving this and other projects. Thank you! 🙏
