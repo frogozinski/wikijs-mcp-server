@@ -16,6 +16,9 @@ import {
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import dotenv from 'dotenv';
+import { homedir } from 'os';
+import { join } from 'path';
+import { existsSync } from 'fs';
 import { WikiJsClient } from './src/client.js';
 
 // Import tools
@@ -27,8 +30,14 @@ import { searchPagesTool, handleSearchPages } from './src/tools/search-pages.js'
 import { deletePageTool, handleDeletePage } from './src/tools/delete-page.js';
 import { movePageTool, handleMovePage } from './src/tools/move-page.js';
 
-// Load environment variables
-dotenv.config();
+// Load environment variables from deployment directory
+const envPath = join(homedir(), '.claude', 'mcp-servers', 'wikijs', '.env');
+if (existsSync(envPath)) {
+  dotenv.config({ path: envPath });
+} else {
+  // Fallback to CWD for development
+  dotenv.config();
+}
 
 // Validate required environment variables
 const WIKIJS_API_URL = process.env.WIKIJS_API_URL;
