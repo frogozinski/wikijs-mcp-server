@@ -65,13 +65,24 @@ export async function handleUpdatePage(client, args) {
       throw new Error('Either "id" or "path" must be provided');
     }
 
+    // IMPORTANT: Wiki.js requires tags parameter in update mutation
+    // If user doesn't provide tags, we need to fetch current tags to preserve them
+    let tagsToUse = args.tags;
+    if (tagsToUse === undefined) {
+      // Fetch current page to get existing tags
+      const pages = await client.listPages(null, 1000);
+      const currentPage = pages.find(p => p.id === pageId);
+      tagsToUse = currentPage?.tags || [];
+    }
+
     // Only pass defined values
     const updateParams = { id: pageId };
     if (args.content !== undefined) updateParams.content = args.content;
     if (args.title !== undefined) updateParams.title = args.title;
     if (args.description !== undefined) updateParams.description = args.description;
     if (args.isPublished !== undefined) updateParams.isPublished = args.isPublished;
-    if (args.tags !== undefined) updateParams.tags = args.tags;
+    // Always pass tags (required by Wiki.js API)
+    updateParams.tags = tagsToUse;
 
     const result = await client.updatePage(updateParams);
 
