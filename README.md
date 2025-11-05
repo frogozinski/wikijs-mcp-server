@@ -1,123 +1,63 @@
 # Wiki.js MCP Server
 
-Model Context Protocol (MCP) server for Wiki.js - enables Claude Code to create, read, update, and manage wiki pages directly from conversations.
+**Model Context Protocol Server for Wiki.js integration in Claude Code** - Create and manage wiki pages directly from your AI assistant.
 
-> 📖 **Full Documentation:** [English](https://faq.markus-michalski.net/en/mcp/wikijs) | [Deutsch](https://faq.markus-michalski.net/de/mcp/wikijs)
+## 📖 Documentation
 
-## Features
+**📚 [Complete Documentation & FAQ](https://faq.markus-michalski.net/en/mcp/wikijs)**
 
-- ✅ Create, update, and delete wiki pages
-- ✅ Search and list pages with filtering
-- ✅ Move pages and reorganize content
-- ✅ Full GraphQL API integration
-- ✅ Multi-language support
+The comprehensive guide includes:
+- Installation instructions
+- Configuration examples
+- All 7 MCP tools with parameters
+- GraphQL API integration details
+- Troubleshooting guide
 
-## Quick Start
-
-### 1. Clone Repository
+## ⚡ Quick Start
 
 ```bash
+# 1. Clone repository
 git clone https://github.com/markus-michalski/wikijs-mcp-server.git ~/.claude/mcp-servers/wikijs
+
+# 2. Install dependencies
 cd ~/.claude/mcp-servers/wikijs
 npm install
-```
 
-### 2. Configure Environment
-
-```bash
+# 3. Configure environment
 cp .env.example .env
+# Edit .env with your Wiki.js API credentials
+
+# 4. Restart Claude Code
 ```
 
-Edit `.env` and add your Wiki.js credentials:
+## 🔑 Requirements
 
-```env
-WIKIJS_API_URL=https://your-wiki.com/graphql
-WIKIJS_API_TOKEN=your-api-token
-```
+- **Node.js 18+**
+- **Wiki.js instance** (v2.x or v3.x)
+- **Wiki.js API Token** with page management permissions
 
-**Get API Token:** Wiki.js Admin → API Access → Generate New Key
-**Required Permissions:** `read:pages`, `write:pages`, `manage:pages`
+## 🛠️ Available Tools
 
-### 3. Add to Claude Code
+- `create_page` - Create new wiki pages with Markdown or HTML content
+- `update_page` - Update existing pages (content, title, description, tags)
+- `get_page` - Retrieve full page content and metadata
+- `list_pages` - List all pages with optional filtering
+- `search_pages` - Full-text search across wiki pages
+- `delete_page` - Permanently delete pages
+- `move_page` - Move pages to new paths
 
-Edit `~/.claude.json`:
+## 📄 License
 
-```json
-{
-  "mcpServers": {
-    "wikijs": {
-      "type": "stdio",
-      "command": "node",
-      "args": ["/home/YOUR_USERNAME/.claude/mcp-servers/wikijs/index.js"],
-      "env": {}
-    }
-  }
-}
-```
+MIT License - See [LICENSE](./LICENSE) for details
 
-### 4. Restart Claude Code
-
-```bash
-/exit
-claude
-```
-
-Verify connection: `/mcp` should show "wikijs ✓ connected"
-
-## Available Tools
-
-| Tool           | Description                                        |
-| -------------- | -------------------------------------------------- |
-| `create_page`  | Create new wiki pages with markdown/HTML content   |
-| `update_page`  | Modify existing pages (content, title, tags, etc.) |
-| `get_page`     | Retrieve page by ID or path                        |
-| `list_pages`   | List all pages with optional filtering             |
-| `search_pages` | Full-text search across wiki content               |
-| `delete_page`  | Remove pages from wiki                             |
-| `move_page`    | Reorganize content by moving pages                 |
-
-**See [full documentation](https://faq.markus-michalski.net/en/mcp/wikijs) for detailed examples and troubleshooting.**
-
-## Example Usage
-
-```javascript
-// Claude Code automatically uses these tools when you ask:
-"Create a comprehensive wiki page for my new osTicket plugin"
-"Update the API documentation page with the new endpoints"
-"Find all pages tagged 'deprecated' and move them to archive/"
-```
-
-## Requirements
-
-- Node.js 18+
-- Wiki.js instance with GraphQL API enabled
-- Wiki.js API token with appropriate permissions
-
-## Documentation
-
-- 📖 [Full Documentation (English)](https://faq.markus-michalski.net/en/mcp/wikijs)
-- 📖 [Vollständige Dokumentation (Deutsch)](https://faq.markus-michalski.net/de/mcp/wikijs)
-- 🔧 [Wiki.js Documentation](https://docs.requarks.io)
-- 🌐 [Model Context Protocol](https://modelcontextprotocol.io)
-
-## License
-
-MIT License - See [LICENSE](LICENSE) file for details.
-
-## Author
+## 👤 Author
 
 **Markus Michalski**
-
 - Website: [markus-michalski.net](https://markus-michalski.net)
-- Wiki: [faq.markus-michalski.net](https://faq.markus-michalski.net)
 - GitHub: [@markus-michalski](https://github.com/markus-michalski)
 
-## Contributing
+## 🔗 Links
 
-Contributions welcome! Please open an issue or pull request.
-
-## ☕ Support Development
-
-This MCP server is completely free and open source. If it saves you time or makes your work easier, I'd appreciate a small donation to keep me caffeinated while developing and maintaining this and other projects
-
-[![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://paypal.me/tondiar)Your support helps me continue improving this and other projects. Thank you! 🙏
+- **[📚 Full Documentation](https://faq.markus-michalski.net/en/mcp/wikijs)** (English)
+- **[📚 Vollständige Dokumentation](https://faq.markus-michalski.net/de/mcp/wikijs)** (Deutsch)
+- [Changelog](./CHANGELOG.md)
