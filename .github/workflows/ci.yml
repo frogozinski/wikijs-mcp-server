@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  code-quality:
+    name: Code Quality Checks
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: ['18', '20', '22']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: JavaScript Syntax Check
+        run: |
+          echo "Checking JavaScript syntax..."
+          find . -name "*.js" ! -path "./node_modules/*" -print0 | while IFS= read -r -d '' file; do
+            echo "Checking: $file"
+            node -c "$file"
+          done
+
+      - name: Check index.js exists and is valid
+        run: |
+          test -f index.js || { echo "Error: index.js not found"; exit 1; }
+          node -c index.js
+          echo "✓ index.js is valid"
+
+  package-validation:
+    name: Package Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verify Required Files
+        run: |
+          echo "Verifying MCP server structure..."
+          test -f package.json || { echo "Error: package.json not found"; exit 1; }
+          test -f index.js || { echo "Error: index.js not found"; exit 1; }
+          test -f README.md || { echo "Error: README.md not found"; exit 1; }
+          test -f CHANGELOG.md || { echo "Error: CHANGELOG.md not found"; exit 1; }
+          test -f LICENSE || { echo "Error: LICENSE not found"; exit 1; }
+          test -f .env.example || { echo "Error: .env.example not found"; exit 1; }
+          echo "✓ All required files present"
+
+      - name: Check package.json metadata
+        run: |
+          echo "Checking package.json metadata..."
+          grep -q '"name"' package.json || { echo "Error: Package name missing"; exit 1; }
+          grep -q '"version"' package.json || { echo "Error: Package version missing"; exit 1; }
+          grep -q '"@modelcontextprotocol/sdk"' package.json || { echo "Error: MCP SDK dependency missing"; exit 1; }
+          echo "✓ Package metadata valid"
+
+      - name: Verify CHANGELOG format
+        run: |
+          echo "Checking CHANGELOG.md format..."
+          grep -q "## \[Unreleased\]" CHANGELOG.md || { echo "Error: [Unreleased] section missing"; exit 1; }
+          echo "✓ CHANGELOG format valid"
