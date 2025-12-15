@@ -11,6 +11,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.0.0] - 2025-12-15
+
+### Changed
+- feat!: Complete TypeScript migration with MCP Best Practices (#2)
+- Auto-sync from Markus-PC
+- Add GitHub Actions CI workflow
+- Reduce README to minimum and reference Wiki.js FAQ
+
+### Fixed
+- Track package-lock.json for reproducible builds
+
+
+---
+
 ## [1.0.0] - 2025-11-05
 
 ### Added
@@ -57,4 +71,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/markus-michalski/wikijs-mcp-server/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/markus-michalski/wikijs-mcp-server/compare/v3.0.0...HEAD
