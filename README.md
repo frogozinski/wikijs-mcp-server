@@ -1,109 +1,148 @@
 # Wiki.js MCP Server
 
-**Model Context Protocol Server for Wiki.js integration in Claude Code** - Create and manage wiki pages directly from your AI assistant.
-
-## v2.0.0 - Major Refactoring
-
-This version includes a complete rewrite following MCP Best Practices:
-
-- **TypeScript** - Full type safety with strict mode
-- **Modern SDK** - Uses MCP SDK v1.24+ with `McpServer.tool()` API
-- **Zod Validation** - Runtime input validation for all tools
-- **Service-Prefixed Tools** - All tools use `wikijs_` prefix for namespace clarity
-- **Tool Annotations** - Proper `readOnlyHint`, `destructiveHint`, etc.
-- **Pagination Support** - List operations return `has_more`, `next_offset`, `total_count`
-- **Character Limits** - Large content is truncated with clear notices
-
-## Documentation
-
-**[Complete Documentation & FAQ](https://faq.markus-michalski.net/en/mcp/wikijs)**
-
-The comprehensive guide includes:
-- Installation instructions
-- Configuration examples
-- All 7 MCP tools with parameters
-- GraphQL API integration details
-- Troubleshooting guide
-
-## Quick Start
-
-```bash
-# 1. Clone repository
-git clone https://github.com/markus-michalski/wikijs-mcp-server.git ~/.claude/mcp-servers/wikijs
-
-# 2. Install dependencies
-cd ~/.claude/mcp-servers/wikijs
-npm install
-
-# 3. Build TypeScript
-npm run build
-
-# 4. Configure environment
-cp .env.example .env
-# Edit .env with your Wiki.js API credentials
-
-# 5. Add to Claude Code config and restart
-```
+MCP server for Wiki.js — manage wiki pages from VS Code, Cursor or Claude Code via GraphQL API. Supports **stdio** (local) and **HTTP** (remote/network) transport.
 
 ## Requirements
 
-- **Node.js 18+**
-- **Wiki.js instance** (v2.x or v3.x)
-- **Wiki.js API Token** with page management permissions
+- Node.js 18+
+- Wiki.js 2.x/3.x with API token (Admin → API Access)
+
+## Installation
+
+```bash
+git clone https://github.com/markus-michalski/wikijs-mcp-server.git
+cd wikijs-mcp-server
+npm run setup
+```
+
+Edit `.env` — set your Wiki.js URL and API token:
+
+```env
+WIKIJS_API_URL=http://localhost:3000/graphql
+WIKIJS_API_TOKEN=your-token-here
+MCP_HTTP_PORT=3200
+```
+
+## Running
+
+### STDIO mode (local editor)
+
+```bash
+npm start
+```
+
+### HTTP mode (remote access over network)
+
+```bash
+npm run start:http
+```
+
+### Install as systemd service (Ubuntu — auto-start on boot)
+
+```bash
+sudo ./scripts/install-service.sh
+```
+
+Manage the service:
+
+```bash
+sudo systemctl status wikijs-mcp
+sudo systemctl restart wikijs-mcp
+sudo journalctl -u wikijs-mcp -f
+```
+
+Uninstall:
+
+```bash
+sudo ./scripts/uninstall-service.sh
+```
+
+## Editor Configuration
+
+### VS Code — HTTP (remote server)
+
+Add to `settings.json`:
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "wikijs": {
+        "type": "http",
+        "url": "http://<SERVER_IP>:3200/mcp"
+      }
+    }
+  }
+}
+```
+
+### VS Code — STDIO (local)
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "wikijs": {
+        "type": "stdio",
+        "command": "node",
+        "args": ["dist/index.js"],
+        "cwd": "/path/to/wikijs-mcp-server",
+        "env": {
+          "WIKIJS_API_URL": "http://localhost:3000/graphql",
+          "WIKIJS_API_TOKEN": "your-token"
+        }
+      }
+    }
+  }
+}
+```
+
+### Cursor — HTTP
+
+Add to `.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "wikijs": {
+      "url": "http://<SERVER_IP>:3200/mcp"
+    }
+  }
+}
+```
 
 ## Available Tools
 
-| Tool | Description | Annotations |
-|------|-------------|-------------|
-| `wikijs_create_page` | Create new wiki pages with Markdown or HTML | `destructiveHint: false` |
-| `wikijs_update_page` | Update existing pages (content, title, tags) | `idempotentHint: true` |
-| `wikijs_get_page` | Retrieve full page content and metadata | `readOnlyHint: true` |
-| `wikijs_list_pages` | List pages with pagination and filtering | `readOnlyHint: true` |
-| `wikijs_search_pages` | Full-text search across wiki pages | `readOnlyHint: true` |
-| `wikijs_delete_page` | Permanently delete pages | `destructiveHint: true` |
-| `wikijs_move_page` | Move pages to new paths | `destructiveHint: false` |
+| Tool | Description |
+|------|-------------|
+| `wikijs_create_page` | Create new page (Markdown/HTML) |
+| `wikijs_update_page` | Update page content, title, tags |
+| `wikijs_get_page` | Get page content and metadata |
+| `wikijs_list_pages` | List pages with pagination |
+| `wikijs_search_pages` | Full-text search |
+| `wikijs_delete_page` | Delete a page |
+| `wikijs_move_page` | Move page to new path |
 
 ## Development
 
 ```bash
-# Development with hot-reload
-npm run dev
-
-# Build for production
-npm run build
-
-# Type checking
-npm run typecheck
+npm run dev          # STDIO with hot-reload
+npm run dev:http     # HTTP with hot-reload
+npm run build        # Build for production
+npm run typecheck    # Type check only
+npm test             # Run tests
 ```
 
-## Project Structure
+## Scripts Reference
 
-```
-wikijs-mcp-server/
-├── src/
-│   ├── index.ts           # Main server entry point
-│   ├── constants.ts       # Shared constants (CHARACTER_LIMIT, etc.)
-│   ├── types.ts           # TypeScript type definitions
-│   ├── schemas/           # Zod validation schemas
-│   ├── services/          # API client and error handling
-│   └── tools/             # Tool implementations
-├── dist/                  # Compiled JavaScript
-├── evaluation.xml         # MCP evaluation test questions
-└── package.json
-```
+| Command | Description |
+|---------|-------------|
+| `npm run setup` | First-time setup (install, .env, build) |
+| `npm start` | Run STDIO server |
+| `npm run start:http` | Run HTTP server (port 3200) |
+| `sudo ./scripts/install-service.sh` | Install as systemd service |
+| `sudo ./scripts/uninstall-service.sh` | Remove systemd service |
 
 ## License
 
-MIT License - See [LICENSE](./LICENSE) for details
-
-## Author
-
-**Markus Michalski**
-- Website: [markus-michalski.net](https://markus-michalski.net)
-- GitHub: [@markus-michalski](https://github.com/markus-michalski)
-
-## Links
-
-- **[Full Documentation](https://faq.markus-michalski.net/en/mcp/wikijs)** (English)
-- **[Vollstaendige Dokumentation](https://faq.markus-michalski.net/de/mcp/wikijs)** (Deutsch)
-- [Changelog](./CHANGELOG.md)
+MIT — see [LICENSE](./LICENSE)
