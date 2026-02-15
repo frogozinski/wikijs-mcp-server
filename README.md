@@ -25,36 +25,19 @@ MCP_HTTP_PORT=3200
 
 ## Running
 
+### HTTP mode (remote access over network)
+
+```bash
+npm run start:http        # start in background (PID saved to server.pid)
+npm run stop              # stop server
+curl http://localhost:3200/health   # check status
+tail -f server.log        # view logs
+```
+
 ### STDIO mode (local editor)
 
 ```bash
 npm start
-```
-
-### HTTP mode (remote access over network)
-
-```bash
-npm run start:http
-```
-
-### Install as systemd service (Ubuntu — auto-start on boot)
-
-```bash
-sudo ./scripts/install-service.sh
-```
-
-Manage the service:
-
-```bash
-sudo systemctl status wikijs-mcp
-sudo systemctl restart wikijs-mcp
-sudo journalctl -u wikijs-mcp -f
-```
-
-Uninstall:
-
-```bash
-sudo ./scripts/uninstall-service.sh
 ```
 
 ## Editor Configuration
@@ -138,10 +121,11 @@ npm test             # Run tests
 | Command | Description |
 |---------|-------------|
 | `npm run setup` | First-time setup (install, .env, build) |
-| `npm start` | Run STDIO server |
-| `npm run start:http` | Run HTTP server (port 3200) |
-| `sudo ./scripts/install-service.sh` | Install as systemd service |
-| `sudo ./scripts/uninstall-service.sh` | Remove systemd service |
+| `npm start` | Run STDIO server (foreground) |
+| `npm run start:http` | Start HTTP server (background, port 3200) |
+| `npm run stop` | Stop HTTP server |
+| `npm run build` | Build TypeScript |
+| `npm test` | Run tests |
 
 ## License
 

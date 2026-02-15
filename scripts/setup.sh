@@ -1,10 +1,8 @@
 #!/bin/bash
 # =============================================================================
-# Wiki.js MCP Server — Initial Setup Script
+# Wiki.js MCP Server — Initial Setup
 # =============================================================================
-# Run this after cloning the repository:
-#   chmod +x scripts/setup.sh
-#   ./scripts/setup.sh
+# Usage:  npm run setup   OR   ./scripts/setup.sh
 # =============================================================================
 
 set -e
@@ -14,54 +12,45 @@ YELLOW='\033[0;33m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-# Resolve project root (one level up from scripts/)
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_DIR"
 
 echo -e "${GREEN}=== Wiki.js MCP Server — Setup ===${NC}\n"
 
-# ---- Check Node.js ----
+# ---- Node.js check ----
 if ! command -v node &> /dev/null; then
-    echo -e "${RED}[ERROR] Node.js is not installed. Please install Node.js 18+ first.${NC}"
+    echo -e "${RED}[ERROR] Node.js not found. Install Node.js 18+ first.${NC}"
     exit 1
 fi
 
 NODE_MAJOR=$(node -v | cut -d 'v' -f 2 | cut -d '.' -f 1)
 if [ "$NODE_MAJOR" -lt 18 ]; then
-    echo -e "${RED}[ERROR] Node.js 18+ is required. Current version: $(node -v)${NC}"
+    echo -e "${RED}[ERROR] Node.js 18+ required. Current: $(node -v)${NC}"
     exit 1
 fi
-echo -e "${GREEN}[OK] Node.js $(node -v) detected${NC}"
+echo -e "${GREEN}[OK] Node.js $(node -v)${NC}"
 
 # ---- Install dependencies ----
-echo -e "\n${GREEN}[STEP 1] Installing dependencies...${NC}"
+echo -e "\n${GREEN}[1/3] Installing dependencies...${NC}"
 npm install
 
-# ---- Create .env from example ----
+# ---- Create .env ----
 if [ ! -f .env ]; then
-    echo -e "\n${GREEN}[STEP 2] Creating .env from .env.example...${NC}"
+    echo -e "\n${GREEN}[2/3] Creating .env from .env.example...${NC}"
     cp .env.example .env
-    echo -e "${YELLOW}[NOTE] Edit .env and set WIKIJS_API_URL and WIKIJS_API_TOKEN before starting.${NC}"
+    echo -e "${YELLOW}  -> Edit .env and set WIKIJS_API_URL and WIKIJS_API_TOKEN${NC}"
 else
-    echo -e "\n${GREEN}[STEP 2] .env already exists — skipping.${NC}"
+    echo -e "\n${GREEN}[2/3] .env already exists — skipping${NC}"
 fi
 
-# ---- Build TypeScript ----
-echo -e "\n${GREEN}[STEP 3] Building TypeScript...${NC}"
+# ---- Build ----
+echo -e "\n${GREEN}[3/3] Building TypeScript...${NC}"
 npm run build
 
-echo -e "\n${GREEN}=== Setup complete! ===${NC}"
-echo ""
+echo -e "\n${GREEN}=== Setup complete ===${NC}\n"
 echo -e "Next steps:"
-echo -e "  1. Edit ${YELLOW}.env${NC} with your Wiki.js API credentials"
-echo -e "  2. Choose how to run the server:"
-echo ""
-echo -e "     ${YELLOW}STDIO mode${NC} (local editor integration):"
-echo -e "       npm start"
-echo ""
-echo -e "     ${YELLOW}HTTP mode${NC} (remote access from VS Code over network):"
-echo -e "       npm run start:http"
-echo ""
-echo -e "     ${YELLOW}Install as systemd service${NC} (auto-start on boot):"
-echo -e "       sudo ./scripts/install-service.sh"
+echo -e "  1. Edit ${YELLOW}.env${NC} with your Wiki.js credentials"
+echo -e "  2. Start HTTP server:  ${YELLOW}npm run start:http${NC}"
+echo -e "  3. Stop HTTP server:   ${YELLOW}npm run stop${NC}"
+echo -e "  4. Check health:       ${YELLOW}curl http://localhost:3200/health${NC}"
 echo ""
